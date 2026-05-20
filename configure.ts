@@ -1,10 +1,8 @@
 import type Configure from '@adonisjs/core/commands/configure'
-import { stubsRoot } from './stubs/main.ts'
 
 /**
- * Configure hook for `@glazk0/lucid-soft-deletes`. Registers the provider
- * and command in the consumer's `adonisrc.ts`, then drops a reference
- * example file showing the `compose()` pattern.
+ * Configure hook for `@glazk0/lucid-soft-deletes`. Registers the package
+ * provider and Ace command in the consumer's `adonisrc.ts`.
  *
  * Run via `node ace configure @glazk0/lucid-soft-deletes`.
  *
@@ -18,6 +16,4 @@ export async function configure(command: Configure): Promise<void> {
     rcFile.addProvider('@glazk0/lucid-soft-deletes/providers/soft_deletes_provider')
     rcFile.addCommand('@glazk0/lucid-soft-deletes/commands')
   })
-
-  await codemods.makeUsingStub(stubsRoot, 'config/soft_deletes.stub', {})
 }
