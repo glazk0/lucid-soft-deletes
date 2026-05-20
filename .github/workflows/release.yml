@@ -2,6 +2,11 @@ name: release
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Explicit version (e.g. 1.0.0) or "major"/"minor"/"patch". Leave blank to auto-derive from conventional commits.'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -32,7 +37,7 @@ jobs:
       - name: Install
         run: npm install
       - name: Release
-        run: npm run release -- --ci
+        run: npm run release -- --ci ${{ github.event.inputs.version }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
