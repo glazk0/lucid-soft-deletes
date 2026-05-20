@@ -4,29 +4,15 @@ Laravel-style soft-delete mixin for [AdonisJS Lucid](https://lucid.adonisjs.com/
 
 Adds a `deletedAt` column, a global `WHERE deleted_at IS NULL` scope, a `trashed` getter, `restore()` and `forceDelete()` instance methods, and `withTrashed()` / `onlyTrashed()` / bulk `restore()` query-builder macros.
 
-## Install
+> This package is a fork of [`lookinlab/adonis-lucid-soft-deletes`](https://github.com/lookinlab/adonis-lucid-soft-deletes), which is no longer actively maintained. The fork brings the mixin forward to **AdonisJS v7 + Lucid v22**, updates the typings, and ships an Ace command for scaffolding the migration.
 
-### One-step (recommended)
+## Install
 
 ```sh
 node ace add @glazk0/lucid-soft-deletes
 ```
 
-This installs the package with your project's package manager and runs the `configure` hook in one go.
-
-### Manual
-
-If you'd rather install and configure separately:
-
-```sh
-npm i @glazk0/lucid-soft-deletes
-# or: pnpm add @glazk0/lucid-soft-deletes
-# or: yarn add @glazk0/lucid-soft-deletes
-
-node ace configure @glazk0/lucid-soft-deletes
-```
-
-Either path registers the package provider in `adonisrc.ts`, registers the `make:soft-delete-migration` Ace command, and drops a reference doc under `docs/soft_deletes_example.md`.
+This installs the package with your project's package manager and runs the `configure` hook, which registers the provider in `adonisrc.ts`, registers the `make:soft-delete-migration` Ace command, and drops a reference doc under `docs/soft_deletes_example.md`.
 
 ## Usage
 
