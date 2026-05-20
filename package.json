@@ -100,7 +100,8 @@
       "./configure.ts",
       "./providers/soft_deletes_provider.ts",
       "./commands/make_soft_delete_migration.ts",
-      "./src/types.ts"
+      "./src/types.ts",
+      "./stubs/main.ts"
     ],
     "outDir": "./build",
     "clean": true,
