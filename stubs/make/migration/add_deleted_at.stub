@@ -1,13 +1,12 @@
-{{#var migrationName = string(entity.name).snakeCase().pluralize().toString()}}
 {{{
   exports({
-    to: app.migrationsPath(`${new Date().getTime()}_add_deleted_at_to_${migrationName}_table.ts`)
+    to: app.makePath('database/migrations', migration.fileName)
   })
 }}}
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
-  protected tableName = '{{ migrationName }}'
+  protected tableName = '{{ migration.tableName }}'
 
   async up() {
     this.schema.alterTable(this.tableName, (table) => {
