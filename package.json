@@ -13,14 +13,29 @@
   ],
   "main": "build/index.js",
   "exports": {
-    ".": "./build/index.js",
-    "./types": "./build/src/types.js",
-    "./providers/soft_deletes_provider": "./build/providers/soft_deletes_provider.js",
-    "./commands": "./build/commands/main.js"
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    },
+    "./providers/soft_deletes_provider": {
+      "types": "./build/providers/soft_deletes_provider.d.ts",
+      "import": "./build/providers/soft_deletes_provider.js"
+    },
+    "./types": {
+      "types": "./build/src/types.d.ts",
+      "import": "./build/src/types.js"
+    },
+    "./commands": {
+      "types": "./build/commands/main.d.ts",
+      "import": "./build/commands/main.js"
+    },
+    "./commands/*": {
+      "types": "./build/commands/*.d.ts",
+      "import": "./build/commands/*.js"
+    }
   },
   "scripts": {
     "copy:templates": "copyfiles \"stubs/**/*.stub\" build",
-    "index:commands": "adonis-kit index build/commands",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -29,7 +44,7 @@
     "test": "c8 npm run quick:test",
     "precompile": "npm run lint",
     "compile": "tsdown && tsc --emitDeclarationOnly --declaration",
-    "postcompile": "npm run copy:templates && npm run index:commands",
+    "postcompile": "npm run copy:templates",
     "build": "npm run compile",
     "release": "release-it",
     "version": "npm run build",
@@ -55,6 +70,9 @@
     "adonis-lucid-soft-deletes",
     "adonis-soft-deletes"
   ],
+  "dependencies": {
+    "@poppinss/utils": "^7.0.1"
+  },
   "devDependencies": {
     "@adonisjs/assembler": "^8.0.0",
     "@adonisjs/core": "^7.0.1",
@@ -64,8 +82,8 @@
     "@adonisjs/tsconfig": "^2.0.0",
     "@japa/assert": "^4.2.0",
     "@japa/runner": "^5.3.0",
+    "@poppinss/hooks": "^7.0.0",
     "@poppinss/ts-exec": "^1.4.4",
-    "@poppinss/utils": "^7.0.1",
     "@release-it/conventional-changelog": "^10.0.5",
     "@types/luxon": "^3.4.2",
     "@types/node": "^25.3.5",
@@ -83,6 +101,7 @@
     "@adonisjs/assembler": "^8.0.0",
     "@adonisjs/core": "^7.0.0",
     "@adonisjs/lucid": "^22.0.0",
+    "@poppinss/hooks": "^7.0.0",
     "luxon": "^3.0.0"
   },
   "peerDependenciesMeta": {
@@ -93,25 +112,6 @@
   "publishConfig": {
     "access": "public",
     "provenance": true
-  },
-  "tsdown": {
-    "entry": [
-      "./index.ts",
-      "./configure.ts",
-      "./providers/soft_deletes_provider.ts",
-      "./commands/make_soft_delete_migration.ts",
-      "./src/types.ts",
-      "./stubs/main.ts"
-    ],
-    "outDir": "./build",
-    "clean": true,
-    "format": "esm",
-    "minify": "dce-only",
-    "fixedExtension": false,
-    "dts": false,
-    "treeshake": false,
-    "sourcemaps": false,
-    "target": "esnext"
   },
   "release-it": {
     "git": {

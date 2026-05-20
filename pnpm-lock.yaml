@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@poppinss/utils':
+        specifier: ^7.0.1
+        version: 7.0.1
     devDependencies:
       '@adonisjs/assembler':
         specifier: ^8.0.0
@@ -32,12 +36,12 @@ importers:
       '@japa/runner':
         specifier: ^5.3.0
         version: 5.3.0
+      '@poppinss/hooks':
+        specifier: ^7.0.0
+        version: 7.3.0
       '@poppinss/ts-exec':
         specifier: ^1.4.4
         version: 1.4.4
-      '@poppinss/utils':
-        specifier: ^7.0.1
-        version: 7.0.1
       '@release-it/conventional-changelog':
         specifier: ^10.0.5
         version: 10.0.6(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(release-it@19.2.4(@types/node@25.9.0))
