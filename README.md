@@ -6,12 +6,27 @@ Adds a `deletedAt` column, a global `WHERE deleted_at IS NULL` scope, a `trashed
 
 ## Install
 
+### One-step (recommended)
+
+```sh
+node ace add @glazk0/lucid-soft-deletes
+```
+
+This installs the package with your project's package manager and runs the `configure` hook in one go.
+
+### Manual
+
+If you'd rather install and configure separately:
+
 ```sh
 npm i @glazk0/lucid-soft-deletes
+# or: pnpm add @glazk0/lucid-soft-deletes
+# or: yarn add @glazk0/lucid-soft-deletes
+
 node ace configure @glazk0/lucid-soft-deletes
 ```
 
-`configure` registers the package provider in `adonisrc.ts` and adds the `make:soft-delete-migration` Ace command.
+Either path registers the package provider in `adonisrc.ts`, registers the `make:soft-delete-migration` Ace command, and drops a reference doc under `docs/soft_deletes_example.md`.
 
 ## Usage
 
