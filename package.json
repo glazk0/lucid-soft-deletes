@@ -1,7 +1,7 @@
 {
   "name": "@glazk0/lucid-soft-deletes",
   "description": "Laravel-style soft-delete mixin for AdonisJS Lucid v22",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "engines": {
     "node": ">=24.0.0"
   },
