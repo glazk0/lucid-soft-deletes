@@ -1,7 +1,7 @@
 import type { BaseModel } from '@adonisjs/lucid/orm'
 import type { LucidModel } from '@adonisjs/lucid/types/model'
 import type { DateTime } from 'luxon'
-import type { INCLUDE_TRASHED, ONLY_TRASHED } from './symbols.ts'
+import type { INCLUDE_TRASHED, ONLY_TRASHED, SCOPE_APPLIED } from './symbols.ts'
 import { SOFT_DELETES } from './symbols.ts'
 
 /**
@@ -63,5 +63,6 @@ declare module '@adonisjs/lucid/types/model' {
 
     [INCLUDE_TRASHED]?: boolean
     [ONLY_TRASHED]?: boolean
+    [SCOPE_APPLIED]?: boolean
   }
 }

@@ -22,3 +22,10 @@ export const ONLY_TRASHED = Symbol('lucid-soft-deletes:only_trashed')
  * `delete()` call through to `super.delete()` instead of soft-deleting.
  */
 export const FORCE_DELETE = Symbol('lucid-soft-deletes:force_delete')
+
+/**
+ * Flag set on a `ModelQueryBuilder` once the global soft-delete scope has been
+ * applied to it. Guards against appending the `deleted_at` predicate twice
+ * when more than one hook reaches the same builder.
+ */
+export const SCOPE_APPLIED = Symbol('lucid-soft-deletes:scope_applied')
