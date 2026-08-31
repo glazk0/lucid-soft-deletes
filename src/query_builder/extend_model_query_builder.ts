@@ -1,6 +1,7 @@
 import { ModelQueryBuilder } from '@adonisjs/lucid/orm'
 import type { LucidModel, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import { INCLUDE_TRASHED, ONLY_TRASHED } from '../symbols.ts'
+import type { SCOPE_APPLIED } from '../symbols.ts'
 import { ModelNotSoftDeletableException } from '../exceptions/model_not_soft_deletable.ts'
 import { isSoftDeletable } from '../types.ts'
 import { debug } from '../debug.ts'
@@ -18,6 +19,7 @@ declare module '@adonisjs/lucid/orm' {
     restore(): Promise<number>
     [INCLUDE_TRASHED]?: boolean
     [ONLY_TRASHED]?: boolean
+    [SCOPE_APPLIED]?: boolean
   }
 }
 

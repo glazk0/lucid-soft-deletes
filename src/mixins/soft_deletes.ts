@@ -9,7 +9,13 @@ import {
 import type { LucidModel, LucidRow, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import { DateTime } from 'luxon'
 import { debug } from '../debug.ts'
-import { FORCE_DELETE, INCLUDE_TRASHED, ONLY_TRASHED, SOFT_DELETES } from '../symbols.ts'
+import {
+  FORCE_DELETE,
+  INCLUDE_TRASHED,
+  ONLY_TRASHED,
+  SCOPE_APPLIED,
+  SOFT_DELETES,
+} from '../symbols.ts'
 
 /**
  * Internal augmentation of `ModelQueryBuilderContract` that exposes the
@@ -23,6 +29,7 @@ type ScopedQuery<Model extends LucidModel> = ModelQueryBuilderContract<
 > & {
   [INCLUDE_TRASHED]?: boolean
   [ONLY_TRASHED]?: boolean
+  [SCOPE_APPLIED]?: boolean
 }
 
 /**
@@ -104,15 +111,24 @@ export function SoftDeletes<Superclass extends NormalizeConstructor<typeof BaseM
      * query builder is marked via `withTrashed()`. Inverted to
      * `WHERE deleted_at IS NOT NULL` when marked via `onlyTrashed()`.
      *
+     * Idempotent: the first call marks the builder with `SCOPE_APPLIED` and
+     * later calls return early, so the predicate is never appended twice —
+     * whether because `paginate()` routes the count query here on top of the
+     * fetch hooks, or because the same builder is awaited more than once.
+     *
      * Generic over `Model extends typeof ModelWithSoftDeletes` so the hook
      * stays typed even though the surrounding mixin uses a `NormalizeConstructor`
      * superclass.
+     *
+     * @param query - The query builder to constrain
      */
     @beforeFind()
     @beforeFetch()
     static ignoreTrashedScope<Model extends typeof ModelWithSoftDeletes>(
       query: ScopedQuery<Model>
     ): void {
+      if (query[SCOPE_APPLIED]) return
+      query[SCOPE_APPLIED] = true
       if (query[INCLUDE_TRASHED]) return
       const col = deletedAtColumn(query.model)
       const qualified = `${query.model.table}.${col}`
@@ -124,9 +140,22 @@ export function SoftDeletes<Superclass extends NormalizeConstructor<typeof BaseM
     }
 
     /**
-     * Propagate scope flags from the row query to the count query when
-     * `paginate()` is used. Without this, `withTrashed().paginate(...)`
-     * would count only non-trashed rows.
+     * Carry the soft-delete scope over to the aggregate query `paginate()`
+     * runs for `total`.
+     *
+     * Lucid clones the count query *before* the fetch hooks run and marks it
+     * `pojo()`, which makes `exec()` treat it as a non-fetch call — so
+     * `before:fetch` never reaches it and `ignoreTrashedScope` would never
+     * see it. Left alone, `total` (and therefore `lastPage`) counts trashed
+     * rows the page itself excludes, so a paginated list reports more pages
+     * than it can fill. Copying the flags and applying the scope by hand here
+     * keeps `total` in step with the rows.
+     *
+     * Dispatched through `countQuery.model` so a model that overrides
+     * `ignoreTrashedScope` has its override honored.
+     *
+     * @param queries - The `[countQuery, rowQuery]` pair Lucid passes to the
+     *   `before:paginate` hook
      */
     @beforePaginate()
     static propagateScopeToCount<Model extends typeof ModelWithSoftDeletes>(
@@ -135,6 +164,7 @@ export function SoftDeletes<Superclass extends NormalizeConstructor<typeof BaseM
       const [countQuery, rowQuery] = queries
       if (rowQuery[INCLUDE_TRASHED]) countQuery[INCLUDE_TRASHED] = true
       if (rowQuery[ONLY_TRASHED]) countQuery[ONLY_TRASHED] = true
+      countQuery.model.ignoreTrashedScope(countQuery)
     }
 
     /**

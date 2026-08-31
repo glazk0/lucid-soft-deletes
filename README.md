@@ -78,6 +78,7 @@ export default class User extends compose(BaseModel, SoftDeletes) {
 - **Raw queries bypass the scope.** `db.from('users')` is not filtered — same behavior as Laravel.
 - **`firstOrCreate` / `updateOrCreate`** skip soft-deleted rows by default and can create duplicates. Use `.withTrashed()` lookups for match-or-restore flows.
 - **`compose()` order matters.** Put `SoftDeletes` first after `BaseModel` so its hooks register before any other mixin's hooks.
+- **`withCount()` / `withAggregate()` / `whereHas()` subqueries are not scoped.** Lucid never executes a relation sub-query builder — it inlines it as SQL — so no hook runs and trashed rows are counted. Constrain the callback yourself: `.withCount('members', (q) => q.whereNull('members.deleted_at'))`. Preloads *are* scoped.
 - **`.clone()` drops the scope flag.** Explicit `query.clone()` after `withTrashed()` loses the opt-out — parity with Laravel.
 - **Serialization.** `deletedAt` is serialized by default. To hide it, override with `@column.dateTime({ columnName: 'deleted_at', serializeAs: null })`.
 - **Bulk `restore()` is gated.** Calling `restore()` on a query builder for a model that lacks the mixin throws `ModelNotSoftDeletableException`.
